@@ -113,6 +113,11 @@ public abstract class MemoryFPlayer implements FPlayer {
     }
 
     public Role getRole() {
+        // Hack to fix null roles..
+        if (role == null) {
+            this.role = Role.NORMAL;
+        }
+
         return this.role;
     }
 
@@ -412,7 +417,7 @@ public abstract class MemoryFPlayer implements FPlayer {
     // These are injected into the format of global chat messages.
 
     public String getChatTag() {
-        return this.hasFaction() ? String.format(Conf.chatTagFormat, this.role.getPrefix() + this.getTag()) : TL.NOFACTION_PREFIX.toString();
+        return this.hasFaction() ? String.format(Conf.chatTagFormat, this.getRole().getPrefix() + this.getTag()) : TL.NOFACTION_PREFIX.toString();
     }
 
     // Colored Chat Tag
@@ -776,7 +781,7 @@ public abstract class MemoryFPlayer implements FPlayer {
         return attemptClaim(forFaction, new FLocation(location), notifyFailure);
     }
 
-        public boolean attemptClaim(Faction forFaction, FLocation flocation, boolean notifyFailure) {
+    public boolean attemptClaim(Faction forFaction, FLocation flocation, boolean notifyFailure) {
         // notifyFailure is false if called by auto-claim; no need to notify on every failure for it
         // return value is false on failure, true on success
 
@@ -922,6 +927,10 @@ public abstract class MemoryFPlayer implements FPlayer {
     }
 
     public int getMapHeight() {
+        if (this.mapHeight < 1) {
+            this.mapHeight = Conf.mapHeight;
+        }
+
         return this.mapHeight;
     }
 
